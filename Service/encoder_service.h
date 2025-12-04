@@ -1,3 +1,9 @@
+/***************************************************************
+ *  File: encoder_service.h
+ *  Description:
+ *      - Header file for encoder service layer.
+ *      - Provides high-level APIs for reading RPM, speed, etc.
+ ****************************************************************/
 #ifndef ENCODER_SERVICE_H
 #define ENCODER_SERVICE_H
 

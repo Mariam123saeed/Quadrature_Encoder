@@ -1,3 +1,12 @@
+/***************************************************************
+ *  File: encoder_service.c
+ *  Layer: Service Layer
+ *  Description:
+ *      - Converts raw encoder ticks into meaningful physical
+ *        values: RPM, speed, distance, rotations.
+ *      - Runs a periodic timer every 100ms to update values.
+ ****************************************************************/
+
 #include "encoder_service.h"
 #include "hardware/timer.h"
 #include <stdio.h>
@@ -12,8 +21,15 @@ static float _speed_cm_s = 0.0f;        // Linear speed in cm/s
 static float _distance_cm = 0.0f;       // Total distance traveled in cm
 
 
-// ---- Timer callback for periodic calculation ----
-// This function runs every 100ms to update RPM, speed, and distance
+/***************************************************************
+ * Function: repeating_timer_callback
+ * Description:
+ *      - Executed every 100ms.
+ *      - Computes delta ticks.
+ *      - Updates RPM, distance, and linear speed.
+ * Returns:
+ *      true to keep the timer running.
+ ***************************************************************/
 static bool repeating_timer_callback(struct repeating_timer *t) {
     current_ticks = encoder_get_ticks();         // Read current encoder ticks
     int32_t delta = current_ticks - last_ticks;  // Calculate ticks since last update
@@ -29,7 +45,13 @@ static bool repeating_timer_callback(struct repeating_timer *t) {
     return true;                      // Keep repeating the timer
 }
 
-// ---- Initialize service layer ----
+/***************************************************************
+ * Function: encoder_service_init
+ * Description:
+ *      - Initializes HAL encoder module.
+ *      - Stores CPR & radius.
+ *      - Starts 100ms timer for periodic calculations.
+ ***************************************************************/
 void encoder_service_init(uint pin_a, uint pin_b, uint cpr, float wheel_radius_cm) {
     encoder_init(pin_a, pin_b);
     _cpr = cpr;
@@ -40,19 +62,38 @@ void encoder_service_init(uint pin_a, uint pin_b, uint cpr, float wheel_radius_c
     add_repeating_timer_ms(100, repeating_timer_callback, NULL, &timer);
 }
 
-// ---- Public API functions ----
+/***************************************************************
+ * Function: encoder_calculate_rpm
+ * Description:
+ *      - Returns the last computed RPM value.
+ ***************************************************************/
 float encoder_calculate_rpm() {
-    return _rpm;     // Return the last calculated RPM
+    return _rpm;      
 }
 
+/***************************************************************
+ * Function: encoder_get_speed_cm_s
+ * Description:
+ *      - Returns linear speed in cm/s.
+ ***************************************************************/
 float encoder_get_speed_cm_s() {
-    return _speed_cm_s;  // Return linear speed in cm/s
+    return _speed_cm_s;   
 }
 
+/***************************************************************
+ * Function: encoder_get_distance_cm
+ * Description:
+ *      - Returns total distance traveled (cm).
+ ***************************************************************/
 float encoder_get_distance_cm() {
-    return _distance_cm;   // Return total distance traveled
+    return _distance_cm;    
 }
 
+/***************************************************************
+ * Function: encoder_get_position_rotations
+ * Description:
+ *      - Returns total number of encoder revolutions.
+ ***************************************************************/
 float encoder_get_position_rotations() {
-    return (float)current_ticks / (float)_cpr;   // Return total wheel rotations
+    return (float)current_ticks / (float)_cpr;    
 }

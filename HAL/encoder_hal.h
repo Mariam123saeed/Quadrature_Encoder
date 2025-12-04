@@ -1,3 +1,10 @@
+/***************************************************************
+ *  File: encoder_hal.h
+ *  Description:
+ *      - Header file for encoder HAL module.
+ *      - Defines types and functions available to higher layers.
+ ****************************************************************/
+
 #ifndef ENCODER_HAL_H
 #define ENCODER_HAL_H
 

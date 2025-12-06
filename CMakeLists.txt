@@ -36,9 +36,9 @@ pico_sdk_init()
 
 # Add executable with all source files
 add_executable(Quadrature_Encoder
-    Quadrature_Encoder.c
-    HAL/encoder_hal.c
-    Service/encoder_service.c
+    App/Quadrature_Encoder.cpp
+    HAL/encoder_hal.cpp
+    Service/encoder_service.cpp
 )
 
 # Set program name and version
@@ -51,7 +51,7 @@ pico_enable_stdio_usb(Quadrature_Encoder 1)
 
 # Include directories
 target_include_directories(Quadrature_Encoder PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/App
     ${CMAKE_CURRENT_LIST_DIR}/HAL
     ${CMAKE_CURRENT_LIST_DIR}/Service
 )
@@ -59,6 +59,7 @@ target_include_directories(Quadrature_Encoder PRIVATE
 # Link standard Pico libraries
 target_link_libraries(Quadrature_Encoder
     pico_stdlib
+    hardware_gpio
     hardware_timer
 )
 

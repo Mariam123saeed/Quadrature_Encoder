@@ -8,7 +8,7 @@
  *      - Provides a higher-level API for application layer access.
  ****************************************************************/
 
-#include "encoder_service.hpp"
+#include "Encoder/encoder_service.hpp"
 #include <cmath>
 
 // ---------------------------

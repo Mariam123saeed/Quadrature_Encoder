@@ -9,7 +9,7 @@
  *      - Encapsulates all hardware-specific details behind a class interface.
  ****************************************************************/
 
-#include "encoder_hal.hpp"
+#include "Encoder/encoder_hal.hpp"
 
 // ---------------------------
 // Static singleton-like instance
@@ -28,6 +28,7 @@ EncoderHAL::EncoderHAL()
 {
     // Assign this object to static instance for ISR callback access
     instance = this;
+     
 }
 
 // ---------------------------

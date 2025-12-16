@@ -2,7 +2,7 @@
 #define ENCODER_HAL_HPP
 
 #include "pico/stdlib.h"
-#include "encoder_config.hpp"
+#include "Encoder/encoder_config.hpp"
 
 // Enum representing rotation direction of the encoder
 enum class EncoderDirection { UNKNOWN, FORWARD, BACKWARD };

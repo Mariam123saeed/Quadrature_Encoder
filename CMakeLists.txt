@@ -10,7 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # (note this can come from environment, CMake cache etc)
 
 if(WIN32)
-    set(USERHOME $ENV{USERPROFILE})
+    set(USERHOME $ENV{USERPROFILE})#include "HBridge_config.hpp"
+
 else()
     set(USERHOME $ENV{HOME})
 endif()
@@ -22,7 +23,8 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 
-# =======================
+# =======================#include "HBridge_config.hpp"
+
 
 set(PICO_BOARD pico_w CACHE STRING "Board type")
 
@@ -37,8 +39,9 @@ pico_sdk_init()
 # Add executable with all source files
 add_executable(Quadrature_Encoder
     App/Quadrature_Encoder.cpp
-    HAL/encoder_hal.cpp
-    Service/encoder_service.cpp
+    HAL/Encoder/encoder_hal.cpp
+    HAL/H_Bridge/HBridge_hal.cpp
+    Service/Encoder/encoder_service.cpp
 )
 
 # Set program name and version
@@ -48,6 +51,7 @@ pico_set_program_version(Quadrature_Encoder "0.1")
 # Enable stdio over UART and USB
 pico_enable_stdio_uart(Quadrature_Encoder 1)
 pico_enable_stdio_usb(Quadrature_Encoder 1)
+#include "HBridge_config.hpp"
 
 # Include directories
 target_include_directories(Quadrature_Encoder PRIVATE
@@ -61,6 +65,7 @@ target_link_libraries(Quadrature_Encoder
     pico_stdlib
     hardware_gpio
     hardware_timer
+    hardware_pwm
 )
 
 # Generate UF2, bin, hex outputs

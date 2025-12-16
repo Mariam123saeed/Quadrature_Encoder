@@ -2,7 +2,7 @@
 #ifndef ENCODER_SERVICE_HPP
 #define ENCODER_SERVICE_HPP
 
-#include "encoder_hal.hpp"
+#include "Encoder/encoder_hal.hpp"
 #include "hardware/timer.h"
 
 /***************************************************************

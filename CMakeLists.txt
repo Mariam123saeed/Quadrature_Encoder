@@ -42,6 +42,7 @@ add_executable(Quadrature_Encoder
     HAL/Encoder/encoder_hal.cpp
     HAL/H_Bridge/HBridge_hal.cpp
     Service/Encoder/encoder_service.cpp
+    Service/Motor/Motor.cpp
 )
 
 # Set program name and version

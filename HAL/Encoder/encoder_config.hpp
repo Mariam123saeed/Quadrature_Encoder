@@ -1,15 +1,29 @@
 #ifndef ENCODER_CONFIG_HPP
 #define ENCODER_CONFIG_HPP
 
-// GPIO pin assignments for the quadrature encoder
-#define ENCODER_PIN_A 10   // Encoder channel A connected to GPIO 10
-#define ENCODER_PIN_B 11   // Encoder channel B connected to GPIO 11
+/***************************************************************
+ * Encoder GPIO Pin Assignments
+ * Description:
+ *     - Define GPIO pins for each quadrature encoder.
+ *     - Supports multiple encoders (Encoder 1, Encoder 2).
+ ****************************************************************/
+
+// Encoder 1 pins
+#define ENCODER1_PIN_A 10
+#define ENCODER1_PIN_B 11
+
+// Encoder 2 pins
+#define ENCODER2_PIN_A 12
+#define ENCODER2_PIN_B 13
+
+/***************************************************************
+ * Encoder Parameters
+ ****************************************************************/
 
 // Encoder counts per revolution (CPR)
-// This is the number of pulses the encoder generates per full rotation
 #define ENCODER_CPR 330
 
-// Radius of the wheel in centimeters, used for linear speed and distance calculation
+// Radius of the wheel in centimeters
 #define WHEEL_RADIUS_CM 3.0f
 
 #endif // ENCODER_CONFIG_HPP

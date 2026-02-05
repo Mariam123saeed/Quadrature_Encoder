@@ -2,21 +2,33 @@
 #include "pico/stdlib.h"
 
 /* Encoder HAL + Service */
+
 #include "Encoder/encoder_hal.hpp"
+#include "Encoder/encoder_config.hpp"
 #include "Encoder/encoder_service.hpp"
-
-/* Motor */
 #include "Motor/Motor.hpp"
-#include "H_Bridge/HBridge_hal.hpp"
+#include "PID/PID.hpp"
 
-/* ---------------------------
-   Pins configuration
---------------------------- */
-#define MOTOR_A_PIN1 2
-#define MOTOR_A_PIN2 3
-#define MOTOR_A_PWM  4
 
-int main() {
+Motor::Motor_cfg Motor1
+{
+   .En_PIn = 6,
+   .Pin1 = 2,
+   .Pin2 = 3,
+   ._pwmSlice = 6,
+};
+
+Motor::Motor_cfg Motor2
+{
+   .En_PIn = 7,
+   .Pin1 = 4,
+   .Pin2 = 5,
+   ._pwmSlice = 7,
+};
+
+
+int main() 
+{
     stdio_init_all();
     sleep_ms(2000);  // wait for Serial monitor
 
@@ -38,18 +50,28 @@ int main() {
     /* ---------------------------
        Motor initialization
     --------------------------- */
-    HBridge hbridgeA(MOTOR_A_PIN1, MOTOR_A_PIN2, MOTOR_A_PWM);
-    Motor motorA(hbridgeA);
-    motorA.init();
+   Motor MotorA(&Motor1);
+   Motor MotorB(&Motor2);
 
-    /* ---------------------------
-       Closed-loop variables
-    --------------------------- */
-    float targetRPM = 120.0f; // Desired motor speed
-    float Kp = 0.007f;        // Simple proportional gain (tune experimentally)
-    float motorOutput = 0.0f;
 
-    while (true) {
+   float targetRPM = 120.0f; // Desired motor speed
+
+//   float Kp = 0.007f;        // Simple proportional gain (tune experimentally)
+   //float motorOutput = 0.0f;
+
+   MotorPID::PIDINPUT pid_input = 
+   {
+    .kp = 0.4f,
+    .kd = 0.01f,
+    .ki = 0.02f,
+    .dt = 0.1f,
+    .expected_speed = targetRPM,
+   };
+
+   MotorPID pid(&pid_input);
+   pid.SetSpeedRPM(targetRPM, true);
+
+   while (true) {
         /* ---------------------------
            Read encoder RPM
         --------------------------- */
@@ -58,17 +80,30 @@ int main() {
         /* ---------------------------
            Simple proportional control
         --------------------------- */
-        float error = targetRPM - currentRPM;
-        motorOutput += Kp * error;
+        //float error = targetRPM - currentRPM;
+        //motorOutput += Kp * error;
 
-        // Limit output to [-1.0, 1.0]
+        /*// Limit output to [-1.0, 1.0]
         if (motorOutput > 1.0f) motorOutput = 1.0f;
         if (motorOutput < -1.0f) motorOutput = -1.0f;
+         */
 
+        /************************* PID Part ******************* */
+        float throttle =  pid.UpdateThrottle(currentRPM);
         /* ---------------------------
            Set motor speed
         --------------------------- */
-        motorA.setSpeed(motorOutput);
+        MotorA.Motor_Move_Right(&Motor1,throttle);
+        MotorB.Motor_Move_Right(&Motor2,throttle);
+        sleep_ms(10000); 
+        MotorA.Motor_Move_Left(&Motor1,throttle);
+        MotorB.Motor_Move_Left(&Motor2,throttle);
+        sleep_ms(10000);
+        MotorA.Motor_stop(&Motor1);
+        MotorB.Motor_stop(&Motor2);
+        sleep_ms(10000);
+
+
 
         /* ---------------------------
            Read and print encoder data
@@ -84,6 +119,7 @@ int main() {
         float speed2 = service2.encoder_getSpeedCmS();
         float dist2  = service2.encoder_getDistanceCm();
         float rot2   = service2.encoder_getRotations();
+
 
         printf("Encoder1 | Ticks: %d | RPM: %.2f | Speed: %.2f cm/s | Distance: %.2f cm | Rotations: %.2f\n",
                ticks1, rpm1, speed1, dist1, rot1);

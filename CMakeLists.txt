@@ -40,9 +40,9 @@ pico_sdk_init()
 add_executable(Quadrature_Encoder
     App/Quadrature_Encoder.cpp
     HAL/Encoder/encoder_hal.cpp
-    HAL/H_Bridge/HBridge_hal.cpp
     Service/Encoder/encoder_service.cpp
     Service/Motor/Motor.cpp
+    Service/PID/PID.cpp
 )
 
 # Set program name and version

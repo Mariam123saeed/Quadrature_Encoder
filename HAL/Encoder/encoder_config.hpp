@@ -9,8 +9,8 @@
  ****************************************************************/
 
 // Encoder 1 pins
-#define ENCODER1_PIN_A 10
-#define ENCODER1_PIN_B 11
+#define ENCODER1_PIN_A 0
+#define ENCODER1_PIN_B 1
 
 // Encoder 2 pins
 #define ENCODER2_PIN_A 12

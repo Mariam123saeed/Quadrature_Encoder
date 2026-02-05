@@ -1,18 +1,20 @@
-#ifndef MOTOR_HPP
-#define MOTOR_HPP
+#include "pico/stdlib.h"
+#include "hardware/pwm.h"
 
-#include "H_Bridge/HBridge_hal.hpp"
-
-class Motor {
+class Motor 
+{
 public:
-    Motor(HBridge& driver);
+    enum class MotorState { STOP, CW, CCW };
 
-    void init();
-    void setSpeed(float speed); // -1.0 >> +1.0
-    void stop();
+    struct Motor_cfg {
+        unsigned int  En_PIn;
+        unsigned int  Pin1;
+        unsigned int  Pin2;
+        unsigned int  _pwmSlice;
+    };
 
-private:
-    HBridge& _driver;
+    Motor(Motor_cfg * driver);
+    void Motor_Move_Right(Motor_cfg *driver, float duty);
+    void Motor_Move_Left(Motor_cfg * driver, float duty);
+    void Motor_stop(Motor_cfg * driver);
 };
-
-#endif
